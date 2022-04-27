@@ -1,16 +1,19 @@
-n = int(input())
+def solve():
+    n = int(input())
+    dp = [0] * (30+1)
+    dp[1] = 0
+    dp[2] = 3
+    for i in range(4, n+1):
+        if i%2 == 1:
+            continue
+        dp[i] = dp[i-2]*3
+        for j in range(0, i-2, 2):
+            dp[i] += dp[j]*2
+        dp[i] += 2
 
-dp = [0]*(n+2)
+    print(dp[n])
+    return
 
-dp[1] = 1
-dp[2] = 3
+if __name__ == "__main__":
+    solve()
 
-for i in range(3, n+1):
-
-    if i%2 == 0:
-        dp[i] = dp[i-2] * 3 + 2
-
-    else:
-        dp[i] = dp[i-1]
-
-print(dp[n])
