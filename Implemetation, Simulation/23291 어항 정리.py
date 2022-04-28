@@ -151,7 +151,7 @@ def stackBowl2(fishes, N):
                 left[i][j] = stackbowl[i][j]
             else:
                 right[i][j-(N//4)] = stackbowl[i][j]
-    pass
+
     # left만 180도 회전
     left = list(reversed(left))
     leftup = list(reversed(left[0]))
