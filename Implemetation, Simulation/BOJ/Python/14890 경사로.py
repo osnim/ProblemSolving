@@ -1,91 +1,49 @@
 import sys
-graph = []
-N, L = map(int, sys.stdin.readline().split())
+
+input = sys.stdin.readline
+N, L = map(int, input().split())
+arr = []
+visited = [[0]*N for _ in range(N)]
 for i in range(N):
-    graph.append(list(map(int, sys.stdin.readline().split())))
+    arr.append(list(map(int, input().split())))
 
-def rowSol(L, result):
-    for i in range(N):
-        MIN = int(1e9)
-        MAX = -1
-        preNum = 0
-        flag = 0  # 차이가 한번도 발생X
-        continueFlag = False
-        for j in range(N):
-            # 행 검사
-            num = graph[i][j]
-            MIN = min(num, MIN)
-            MAX = max(num, MAX)
+def check(row):
+    tempVisited = [0] * N
+    for i in range(1, N):
+        diff = row[i] - row[i-1]
+        if abs(diff) > 1: return False
+        # 증가 하는 경우
+        elif diff == 1:
+            # 경사로가| 밖에 나가는 경우
+            # 경사로가 이미 있거나 이전이 평평하지 않은 경우(앞에 것은 신경 X)
+            for j in range(L):
+                if i - j - 1 < 0 or tempVisited[i-j-1] == 1 or row[i-1] != row[i-j-1]:
+                    return False
+                # 경사로 설치
+                if row[i-j-1] == row[i-1]:
+                    tempVisited[i-j-1] = 1
+        #감소 하는 경우
+        elif diff == -1:
+            # 경사로가 밖에 나가는 경우
+            # 경사로가 이미 있거나 이전이 평평하지 않은 경우(앞에 것은 신경 X)
+            for j in range(L):
+                if i + j >= N or tempVisited[i+j] == 1 or row[i] != row[i+j]:
+                    return False
+                # 경사로 설치
+                if row[i] == row[i + j]:
+                    tempVisited[i + j] = 1
+    return True
+cnt = 0
+for i in range(N):
+    if check(arr[i]):
+        cnt += 1
 
-            if abs(MIN - MAX) >= 2:
-                continueFlag = True
-                break
-            if preNum != 0:  # 증가>감소 또는 감소>증가 경우 확인
-                dif = num - preNum
-                if flag == 0:
-                    flag = dif
-                elif flag * dif == -1:
-                    continueFlag = True
-                    break
-            preNum = num
+arr = list(zip(*arr))
 
-        if continueFlag:
-            continue
+for i in range(N):
+    if check(arr[i]):
+        cnt += 1
 
-        if MAX == MIN:  # 값이 계속 같은 경우
-            result += 1
-            print(i)
-            continue
+print(cnt)
 
-        minCnt = graph[i].count(MIN)
 
-        if minCnt >= L:
-            print(i)
-            result += 1
-
-    return result
-
-def colSol(L, result):
-    for i in range(N):
-        MIN = int(1e9)
-        MAX = -1
-        preNum = 0
-        flag = 0  # 차이가 한번도 발생X
-        continueFlag = False
-        for j in range(N):
-            # 행 검사
-            num = graph[j][i]
-            MIN = min(num, MIN)
-            MAX = max(num, MAX)
-            if abs(MIN - MAX) >= 2:
-                continueFlag = True
-                break
-            if preNum != 0:  # 증가>감소 또는 감소>증가 경우 확인
-                dif = num - preNum
-                if flag == 0:
-                    flag = dif
-                elif flag * dif == -1:
-                    continueFlag = True
-                    break
-            preNum = num
-
-        if continueFlag:
-            continue
-
-        if MAX == MIN:  # 값이 계속 같은 경우
-            result += 1
-            print(i)
-            continue
-
-        minCnt = 0
-        for j in range(N):
-            if graph[j][i] == MIN:
-                minCnt += 1
-
-        if minCnt >= L:
-            print(i)
-            result += 1
-
-    return result
-
-print(colSol(L, 0) + rowSol(L, 0))
