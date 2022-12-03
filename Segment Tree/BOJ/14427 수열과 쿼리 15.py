@@ -32,17 +32,7 @@ def insert(index, value):
 
 def init():
     global base, N, arr, M, base, cnt, segmentTree
-    # N이 6이면 base = 2^h-1 = 2^3-1 = 7
-    while base < N:
-        base *= 2
-        cnt += base  # 세그멘트 트리의 노드 개수
-    base -= 1
 
-    for i in range(cnt+1):
-        segmentTree.append(Node(i, MAX))
-
-if __name__ == "__main__":
-    global base, N, arr, M, base, cnt, segmentTree
     N = int(input())  # 수열의 크기
     arr = [0] + list(map(int, input().split()))
     M = int(input())  # 쿼리의 개수
@@ -50,10 +40,22 @@ if __name__ == "__main__":
     segmentTree = []
     MAX = int(10e9)
 
+    # N이 6이면 base = 2^h-1 = 2^3-1 = 7
+    while base < N:
+        base *= 2
+        cnt += base  # 세그멘트 트리의 노드 개수
+    base -= 1
+
+    # 세그멘트 트리 초기화, 배열로 구현
+    for i in range(cnt+1):
+        segmentTree.append(Node(i, MAX))
+
+if __name__ == "__main__":
+    global base, N, arr, M, base, cnt, segmentTree
     init()
+
     # 리프노드에 수열 넣기
-    for i in range(1, N + 1):
-        insert(i, arr[i])  # 세그멘트 트리 초기화, 배열로 구현
+    for i in range(1, N + 1): insert(i, arr[i])
 
     for i in range(M):
         query = list(map(int, input().split()))
