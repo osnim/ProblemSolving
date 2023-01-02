@@ -8,7 +8,6 @@ def solution(n, k, enemy):
     left = 0
     while left < end:
         e = enemy[left]
-        # print(n, q, left+1)
         if n >= e:  # 병사가 적보다 많은 경우
             hq.heappush(q, -e)
             n -= e
