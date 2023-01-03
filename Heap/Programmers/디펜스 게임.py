@@ -2,7 +2,6 @@ import heapq as hq
 
 def solution(n, k, enemy):
     global answer
-    answer = k  # 최소 k개 이상 가능
     q = []
     end = len(enemy)
     left = 0
